@@ -24,12 +24,19 @@ public class GameManager : MonoBehaviour {
     private float bestTime = 0f;
     private bool beatBestTime;
 
+    private AudioSource audioBestScore;
+    private AudioSource audioGameOver;
+
+
     void Awake()
     {
         floor = GameObject.Find("Foreground");
         spawner = GameObject.Find("Spawner").GetComponent<Spawner>();
         timeManager = GetComponent<TimeManager>();
-    } 
+        audioBestScore = GameObject.Find("AudioBestScore").GetComponent<AudioSource>();
+        audioGameOver = GameObject.Find("AudioGameOver").GetComponent<AudioSource>();
+
+    }
 
     // Use this for initialization
     void Start () {
@@ -99,6 +106,10 @@ public class GameManager : MonoBehaviour {
             bestTime = timeElapsed;
             PlayerPrefs.SetFloat("BestTime", bestTime);
             beatBestTime = true;
+            audioBestScore.Play();
+        } else
+        {
+            audioGameOver.Play();
         }
     }
 

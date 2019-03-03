@@ -10,10 +10,13 @@ public class Jump : MonoBehaviour {
     private Rigidbody2D body2d;
     private InputState inputState;
 
+    private AudioSource audioJump;
+
     void Awake()
     {
         body2d = GetComponent<Rigidbody2D>();    
-        inputState = GetComponent<InputState>();    
+        inputState = GetComponent<InputState>();
+        audioJump = GameObject.Find("AudioJump").GetComponent<AudioSource>();
     }
 
 	// Update is called once per frame
@@ -24,6 +27,7 @@ public class Jump : MonoBehaviour {
             if (inputState.actionButton)
             {
                 body2d.velocity = new Vector2(transform.position.x < 0 ? forwardSpeed : 0, jumpSpeed);
+                audioJump.Play();
             }
         }
 		

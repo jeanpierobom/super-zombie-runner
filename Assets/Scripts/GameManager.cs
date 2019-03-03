@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour {
 
@@ -12,6 +14,15 @@ public class GameManager : MonoBehaviour {
 
     private GameObject floor;
     private Spawner spawner;
+
+    public Text continueText;
+    private float blinkTime = 0f;
+    private bool blink;
+
+    public Text scoreText;
+    private float timeElapsed = 0f;
+    private float bestTime = 0f;
+    private bool beatBestTime;
 
     void Awake()
     {
@@ -31,7 +42,11 @@ public class GameManager : MonoBehaviour {
         spawner.active = false;
 
         Time.timeScale = 0;
-	}
+
+        continueText.text = "PRESS ANY BUTTON TO START";
+
+        bestTime = PlayerPrefs.GetFloat("BestTime");
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -43,7 +58,26 @@ public class GameManager : MonoBehaviour {
                 ResetGame();
             }
         }
-	}
+
+        continueText.text = "PRESS ANY BUTTON TO START";
+
+        if (!gameStarted)
+        {
+            blinkTime++;
+            if (blinkTime % 40 == 0)
+            {
+                blink = !blink;
+            }
+
+            continueText.canvasRenderer.SetAlpha(blink ? 0 : 1);
+            var textColor = beatBestTime ? "#FF0" : "#FFF";
+            scoreText.text = "TIME: " + FormatTime(timeElapsed) + "\n<color=" + textColor + ">BEST: " + FormatTime(bestTime) + "</color>";
+        } else
+        {
+            timeElapsed += Time.deltaTime;
+            scoreText.text = "TIME: " + FormatTime(timeElapsed);
+        }
+    }
 
     void OnPlayerKilled()
     {
@@ -57,6 +91,15 @@ public class GameManager : MonoBehaviour {
         timeManager.ManipulateTime(0, 5.5f);
 
         gameStarted = false;
+
+        continueText.text = "PRESS ANY BUTTON TO RESTART";
+
+        if (timeElapsed > bestTime)
+        {
+            bestTime = timeElapsed;
+            PlayerPrefs.SetFloat("BestTime", bestTime);
+            beatBestTime = true;
+        }
     }
 
     void ResetGame()
@@ -69,5 +112,16 @@ public class GameManager : MonoBehaviour {
         playerDestroyScript.DestroyCallback += OnPlayerKilled;
 
         gameStarted = true;
+
+        continueText.canvasRenderer.SetAlpha(0);
+
+        timeElapsed = 0f;
+        beatBestTime = false;
+    }
+
+    string FormatTime(float value)
+    {
+        TimeSpan t = TimeSpan.FromSeconds(value);
+        return string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
     }
 }

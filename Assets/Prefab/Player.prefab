@@ -61,12 +61,12 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 60
+  m_AngularDrag: 0
+  m_GravityScale: 50
   m_Material: {fileID: 0}
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &61203082206766418
 BoxCollider2D:
@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpSpeed: 240
+  doubleJumpSpeed: 120
   forwardSpeed: 20
 --- !u!114 &114075156469722696
 MonoBehaviour:
@@ -146,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd32ef152ec16c418ee414958e39d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 36
+  offset: 20
 --- !u!114 &114420131279816816
 MonoBehaviour:
   m_ObjectHideFlags: 1
